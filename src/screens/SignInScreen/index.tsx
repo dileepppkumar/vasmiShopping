@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { signIn } from 'aws-amplify/auth';
 
 const SignInScreen = () => {
   const navigation = useNavigation();
@@ -17,29 +17,17 @@ const SignInScreen = () => {
 
   const handleSubmit = async () => {
     try {
-      const loginDataString = await AsyncStorage.getItem('loginData');
+      const user = await signIn(email, password);
+      console.log('Logged in successfully!', user);
 
-      if (loginDataString) {
-        const loginData = JSON.parse(loginDataString);
+      setEmail('');
+      setPassword('');
 
-        if (loginData.email === email && loginData.password === password) {
-          setError('');
-          console.log('Logged in successfully!');
-          setEmail('');
-          setPassword('');
-
-          navigation.navigate('HomeTabs');
-        } else {
-          setError('Invalid email or password.');
-        }
-      } else {
-        setError('User not registered. Please sign up first.');
-      }
     } catch (error) {
-      console.error('Error retrieving login data from AsyncStorage:', error);
+      console.error('Error signing in:', error);
+      setError('Invalid email or password.');
     }
   };
-
 
   return (
     <View style={styles.login}>

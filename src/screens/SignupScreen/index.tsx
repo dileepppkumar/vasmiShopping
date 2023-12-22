@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import { signUp } from 'aws-amplify/auth';
 const SignupScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
@@ -20,23 +20,18 @@ const SignupScreen = () => {
       return;
     }
 
-    const loginData = {
-      email,
-      password,
-    };
 
     try {
-      await AsyncStorage.setItem('loginData', JSON.stringify(loginData));
-      navigation.navigate('signIn'); // Adjust the navigation route as needed
-    } catch (error) {
-      console.error('Error saving login data to AsyncStorage:', error);
+      const user = await signUp({
+        username: email,
+        password,
+        attributes: {
+          email, 
+        },
+      });
+      console.log('Signup successful!', user);
     }
 
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Confirm Password:', confirmPassword);
-
-    // Clear input fields
     setEmail('');
     setPassword('');
     setConfirmPassword('');

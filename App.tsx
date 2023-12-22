@@ -1,118 +1,54 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+/* eslint-disable prettier/prettier */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import BottomTabNav from './src/router/bottomTabNav';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import {Amplify} from 'aws-amplify';
+import amplifyconfig from './src/amplifyconfiguration.json';
+import SignUpScreen from './src/screens/SignupScreen';
+import ConfirmSignUpScreen from './src/screens/ConfirmSignupScreen';
+import SignInScreen from './src/screens/SignInScreen';
+import ProfileComponent from './src/screens/ProfileScreen';
+import PaymentScreen from './src/screens/PaymentScreen';
+import OrderPlacedScreen from './src/screens/OrderPlacedScreen';
+import ResetScreen from './src/screens/ResetScreen';
+import {LocalShoppingCartProvider} from './context';
+Amplify.configure(amplifyconfig);
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const Stack = createNativeStackNavigator();
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const [user, setUser] = useState(null);
+
+  const handleSignIn = userData => {
+    setUser(userData);
   };
+  console.log(user);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <LocalShoppingCartProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="signIn" component={SignInScreen} />
+
+          <Stack.Screen
+            name="Profile"
+            component={ProfileComponent}
+            initialParams={{user}}
+          />
+          <Stack.Screen name="HomeTabs" component={BottomTabNav} />
+          <Stack.Screen name="Signup" component={SignUpScreen} />
+          <Stack.Screen name="ConfirmSignUp" component={ConfirmSignUpScreen} />
+          <Stack.Screen name="payment" component={PaymentScreen} />
+          <Stack.Screen name="orderPlaced" component={OrderPlacedScreen} />
+          <Stack.Screen name="ResetScreen" component={ResetScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </LocalShoppingCartProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;

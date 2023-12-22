@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vasmi-dev-11749-authRole",
+      "UnauthRoleArn": "arn:aws:iam::276816098570:role/amplify-vasmi-dev-11749-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::276816098570:role/amplify-vasmi-dev-11749-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-vasmi-dev-11749-deployment",
+      "UnauthRoleName": "amplify-vasmi-dev-11749-unauthRole",
+      "StackName": "amplify-vasmi-dev-11749",
+      "StackId": "arn:aws:cloudformation:us-east-1:276816098570:stack/amplify-vasmi-dev-11749/b73f3330-9f70-11ee-b303-0a4e0291fdad",
+      "AmplifyAppId": "dja49624wdaoc"
+    },
+    "categories": {
+      "auth": {
+        "vasmi2872a05f": {}
+      }
+    }
+  }
+}
